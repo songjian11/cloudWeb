@@ -1,0 +1,98 @@
+server:
+  port: 8181
+  tomcat:
+    max-http-header-size: 24576
+spring:
+  application:
+    name: purchase-plan
+  datasource:
+    url: jdbc:mysql://192.168.7.165:3306/purchaseplandb?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: purchaseplan
+    password: purchaseplan@D1234
+  servlet:
+    multipart:
+      max-file-size: 100Mb
+      max-request-size: 100Mb
+
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
+#    timeout: 10000
+#    #注意如果redis无密码,password可以设置为none
+#    password: 123456
+
+mybatis:
+  mapper-locations: mapper/**Mapper.xml
+  configuration:
+      map-underscore-to-camel-case: true
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  row-bounds-with-count: true
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  MaxAutoRetries: 1 #对第一次请求的服务的重试次数
+  MaxAutoRetriesNextServer: 1 #要重试的下一个服务的最大数量（不包括第一个服务）
+  OkToRetryOnAllOperations: true # 无论是请求超时或者socket read timeout都进行重试
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  #<2>
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+hystrix:
+  metrics:
+    enabled: true
+  command: 
+    HelloClient#toHello():
+      execution: 
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+      circuitBreaker:
+        requestVolumeThreshold: 20
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+  client:
+    serviceUrl:
+      defaultZone: http://bbg:bbg1234@192.168.7.162:31025/eureka
+      #defaultZone: http://localhost:8761/eureka
+    registry-fetch-interval-seconds: 10
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+
+
+logging:
+  level:
+     com.bbg.purchaseplan.dao : debug
+
+info:
+  name: ${spring.application.name}
+  build:
+    name: "@name@"
+    artifact: "@artifactId@"
+    version: "@version@"
+
+swagger:
+  enable: true
+
+path:
+  transferFilePath: D:\workspace-gongyinglian\purchase-plan\purchase-plan\orderUpload

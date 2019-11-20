@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbg.purchaseplan.dao.OrderDao" >
+  <resultMap id="BaseResultMap" type="com.bbg.purchaseplan.po.Order" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="depot_code" property="depotCode" jdbcType="VARCHAR" />
+    <result column="depot_name" property="depotName" jdbcType="VARCHAR" />
+    <result column="order_person_id" property="orderPersonId" jdbcType="VARCHAR" />
+    <result column="order_person_name" property="orderPersonName" jdbcType="VARCHAR" />
+    <result column="supp_code" property="suppCode" jdbcType="VARCHAR" />
+    <result column="supp_name" property="suppName" jdbcType="VARCHAR" />
+    <result column="purchase_time" property="purchaseTime" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="add_person_id" property="addPersonId" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="SMALLINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="mark1" property="mark1" jdbcType="VARCHAR" />
+    <result column="mark2" property="mark2" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, order_code, depot_code, depot_name, supp_code, supp_name, order_person_id, purchase_time,
+    add_time, add_person_id, flag, remark, mark1, mark2
+  </sql>
+
+  <insert id="insert" parameterType="com.bbg.purchaseplan.po.Order" >
+    insert into p_purchase_order (order_code, depot_code,
+      depot_name, supp_code, supp_name,
+      order_person_id, purchase_time, add_time,
+      add_person_id, flag, remark,
+      mark1, mark2)
+    values (#{orderCode,jdbcType=VARCHAR}, #{depotCode,jdbcType=VARCHAR},
+      #{depotName,jdbcType=VARCHAR}, #{suppCode,jdbcType=VARCHAR}, #{suppName,jdbcType=VARCHAR},
+      #{orderPersonId,jdbcType=VARCHAR}, #{purchaseTime,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP},
+      #{addPersonId,jdbcType=VARCHAR}, #{flag,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR},
+      #{mark1,jdbcType=VARCHAR}, #{mark2,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.bbg.purchaseplan.po.Order" >
+    insert into p_purchase_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderCode != null" >
+        order_code,
+      </if>
+      <if test="depotCode != null" >
+        depot_code,
+      </if>
+      <if test="depotName != null" >
+        depot_name,
+      </if>
+      <if test="suppCode != null" >
+        supp_code,
+      </if>
+      <if test="suppName != null" >
+        supp_name,
+      </if>
+      <if test="orderPersonId != null" >
+        order_person_id,
+      </if>
+      <if test="purchaseTime != null" >
+        purchase_time,
+      </if>
+      <if test="addTime != null" >
+        add_time,
+      </if>
+      <if test="addPersonId != null" >
+        add_person_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="mark1 != null" >
+        mark1,
+      </if>
+      <if test="mark2 != null" >
+        mark2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderCode != null" >
+        #{orderCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depotCode != null" >
+        #{depotCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depotName != null" >
+        #{depotName,jdbcType=VARCHAR},
+      </if>
+      <if test="suppCode != null" >
+        #{suppCode,jdbcType=VARCHAR},
+      </if>
+      <if test="suppName != null" >
+        #{suppName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPersonId != null" >
+        #{orderPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseTime != null" >
+        #{purchaseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addPersonId != null" >
+        #{addPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="mark1 != null" >
+        #{mark1,jdbcType=VARCHAR},
+      </if>
+      <if test="mark2 != null" >
+        #{mark2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <insert id="saveOrder" parameterType="com.bbg.purchaseplan.po.Order" >
+    insert into p_purchase_order (order_code, depot_code,
+    depot_name, supp_code, supp_name,
+    order_person_id, order_person_name, purchase_time, add_time,
+    add_person_id, remark)
+    values (#{orderCode,jdbcType=VARCHAR}, #{depotCode,jdbcType=VARCHAR},
+      #{depotName,jdbcType=VARCHAR}, #{suppCode,jdbcType=VARCHAR}, #{suppName,jdbcType=VARCHAR},
+      #{orderPersonId,jdbcType=VARCHAR},#{orderPersonName,jdbcType=VARCHAR},
+       #{purchaseTime,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP},
+      #{addPersonId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="queryGoodsOrdersByDepotCodeAndPurchaseTime" resultType="com.bbg.purchaseplan.po.GoodsOrderInfo">
+    SELECT
+	    a.id, a.order_code, a.depot_code, a.depot_name, a.supp_code, a.supp_name, a.order_person_id, a.purchase_time,
+	    b.goods_code, b.goods_name, b.price, b.goods_num
+    FROM
+	    p_purchase_order a
+	LEFT JOIN p_purchase_goods b ON b.order_code = a.order_code
+    WHERE
+	    a.depot_code = #{depotCode, jdbcType=VARCHAR}
+
+	AND a.purchase_time = #{purchaseTime, jdbcType=VARCHAR}
+    ORDER BY
+	    a.add_time ASC
+  </select>
+
+  <select id="queryGoodsOrdersByDepotCodeAndSuppCodeAndPurchaseTime" resultType="com.bbg.purchaseplan.po.GoodsOrderInfo">
+    SELECT
+	    a.id, a.order_code, a.depot_code, a.depot_name, a.supp_code, a.supp_name, a.order_person_id, a.purchase_time,
+	    b.goods_code, b.goods_name, b.price, b.goods_num, b.dept, b.barcode, b.standardUom, b.vatInRate
+    FROM
+	    p_purchase_order a
+	LEFT JOIN p_purchase_goods b ON b.order_code = a.order_code
+    WHERE a.depot_code = #{depotCode, jdbcType=VARCHAR}
+	AND a.supp_code = #{suppCode, jdbcType=VARCHAR}
+	AND a.purchase_time = #{purchaseTime, jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryOrderInfo" resultType="com.bbg.purchaseplan.po.GoodsOrderInfo">
+    select a.id, a.order_code, a.depot_code, a.depot_name, a.supp_code, a.supp_name, a.order_person_id, a.order_person_name, a.purchase_time,
+	    b.goods_code, b.goods_name, b.price, b.goods_num, b.dept, b.barcode, b.standardUom, b.vatInRate
+    from p_purchase_order a
+    LEFT JOIN p_purchase_goods b
+    ON b.order_code = a.order_code
+    where flag = 1
+    order by b.goods_code
+  </select>
+
+  <select id="queryGoodsOrdersByPersonIdAndDepotCodeAndPurchaseTime" resultType="com.bbg.purchaseplan.po.GoodsOrderInfo">
+    SELECT
+	    a.id, a.order_code, a.depot_code, a.depot_name, a.supp_code, a.supp_name, a.order_person_id, a.purchase_time,
+	    b.goods_code, b.goods_name, b.price, b.goods_num
+    FROM
+	    p_purchase_order a
+	LEFT JOIN p_purchase_goods b ON b.order_code = a.order_code
+    WHERE
+	    a.depot_code = #{depotCode, jdbcType=VARCHAR}
+
+	AND a.purchase_time = #{purchaseTime, jdbcType=VARCHAR}
+	AND a.order_person_id = #{personId, jdbcType=VARCHAR}
+    ORDER BY
+	    a.add_time ASC
+  </select>
+
+  <select id="updateBatchOrderStatus" parameterType="java.util.List">
+    update p_purchase_order set flag = 2
+    <where>
+      order_code in
+      <foreach collection="list" item="item" open="(" close=")" separator="," >
+        #{item}
+      </foreach>
+    </where>
+  </select>
+
+  <select id="querySeq" parameterType="java.lang.String" resultType="java.lang.String">
+    select nextval(#{key})
+  </select>
+</mapper>

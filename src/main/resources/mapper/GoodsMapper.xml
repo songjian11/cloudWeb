@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbg.purchaseplan.dao.GoodsDao" >
+
+  <resultMap id="BaseResultMap" type="com.bbg.purchaseplan.po.Goods">
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+    <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="dept" property="dept" jdbcType="VARCHAR" />
+    <result column="vatInRate" property="vatInRate" jdbcType="VARCHAR" />
+    <result column="standardUom" property="standardUom" jdbcType="VARCHAR" />
+    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+    <result column="goods_num" property="goodsNum" jdbcType="VARCHAR" />
+    <result column="mark1" property="mark1" jdbcType="VARCHAR" />
+    <result column="mark2" property="mark2" jdbcType="VARCHAR" />
+    <result column="mark3" property="mark3" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, order_code, goods_code, goods_name, price, goods_num, vatInRate, standardUom, barcode, mark1, mark2, mark3
+  </sql>
+
+  <insert id="saveBatchGoods" parameterType="java.util.List">
+    insert into p_purchase_goods (
+      order_code,
+      goods_code,
+      goods_name,
+      price,
+      goods_num,
+      dept,
+      vatInRate,
+      standardUom,
+      barcode
+    )values
+    <foreach collection="list" item="item" open="" close="" separator="," >
+      (#{item.orderCode,jdbcType=VARCHAR},
+       #{item.goodsCode,jdbcType=VARCHAR},
+       #{item.goodsName,jdbcType=VARCHAR},
+       #{item.price,jdbcType=VARCHAR},
+       #{item.goodsNum,jdbcType=VARCHAR},
+       #{item.dept,jdbcType=VARCHAR},
+       #{item.vatInRate,jdbcType=VARCHAR},
+       #{item.standardUom,jdbcType=VARCHAR},
+       #{item.barcode,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
+</mapper>
